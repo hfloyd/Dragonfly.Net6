@@ -1,0 +1,85 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net5</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Copyright>Heather Floyd [www.HeatherFloyd.com]</Copyright>
+    <RepositoryType>GIT</RepositoryType>
+    <Authors>Heather Floyd</Authors>
+    <Company></Company>
+    <Product>Dragonfly</Product>
+    <Description>A collection of .Net Helpers &amp; Models (Targeted to .Net 5, compatible with .Net 6+)</Description>
+    <PackageLicenseUrl></PackageLicenseUrl>
+    <PackageProjectUrl>https://dragonflylibraries.com/aspnet-packages/net-helpers-models/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/hfloyd/Dragonfly.Net5</RepositoryUrl>
+    <PackageId>Dragonfly.Net5</PackageId>
+    <AssemblyName>Dragonfly.Net5</AssemblyName>
+    <Version>1.6.1</Version>
+    <AssemblyVersion>$(Version)</AssemblyVersion>
+    <FileVersion>$(Version)</FileVersion>
+    <PackageReleaseNotes>Updates including: Adding .Url() extension to HttpRequest</PackageReleaseNotes>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <BaseIntermediateOutputPath />
+    <PackageIcon>Dragonfly-NetHelpers-128.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Title>Dragonfly .Net 5 Helpers</Title>
+    <IncludeSymbols>True</IncludeSymbols>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="HttpHelpers\**" />
+    <EmbeddedResource Remove="HttpHelpers\**" />
+    <None Remove="HttpHelpers\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="NetHelpers\Cookies.cs" />
+    <Compile Remove="NetHelpers\Info.cs" />
+    <Compile Remove="NetHelpers\Json.cs" />
+    <Compile Remove="NetHelpers\LazyHtmlString.cs" />
+    <Compile Remove="NetHelpers\Logger.cs" />
+    <Compile Remove="NetHelpers\MySql.cs" />
+    <Compile Remove="NetHelpers\RemotePost.cs" />
+    <Compile Remove="NetHelpers\WebsiteVisitor.cs" />
+    <Compile Remove="NetModels\DatabaseAccess.cs" />
+    <Compile Remove="NetModels\XmlConfig.cs" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Html.Abstractions" Version="2.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.DataAnnotations" Version="2.0.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.11" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="1.1.0" />
+		<!--<PackageReference Include="Microsoft.AspNetCore.Mvc.RazorPages"/>-->
+	</ItemGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile></DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile></DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.37" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" PrivateAssets="All" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Dragonfly-NetHelpers-128.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\LICENSE.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <Import Project="..\Custom.targets" />
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="REM XCOPY /s /y  &quot;$(TargetDir)$(TargetName).*&quot;  &quot;C:\Users\.Web\bin&quot;" />
+  </Target>
+</Project>
