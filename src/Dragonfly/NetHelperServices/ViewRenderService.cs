@@ -20,8 +20,6 @@
 
 	//From https://stackoverflow.com/a/57888901/3841490
 
-	//DI Setup: services.AddScoped<IViewRenderService, ViewRenderService>();
-	//Usage (in a Controller): string html = await _RenderService.RenderToStringAsync("<NameOfPartial>", new Model());
 	public interface IViewRenderService
 	{
 		//public string RenderToStringWithStatus(HttpContext HttpContext, string ViewName, object Model, out StatusMessage Status);
@@ -31,6 +29,9 @@
 		Task<string> RenderToStringAsync(HttpContext HttpContext, string ViewName, object Model, Dictionary<string, object> ViewDataDictionary = null);
 	}
 
+	/// <summary>Allows Rendering a Razor View to a string</summary>
+	///DI Setup: services.AddScoped&gt;IViewRenderService, ViewRenderService&lt;();
+	///Usage (in a Controller): string html = await _RenderService.RenderToStringAsync(httpContext,"NameOfPartial", new Model());
 	public class ViewRenderService : IViewRenderService
 	{
 		#region CTOR & DI

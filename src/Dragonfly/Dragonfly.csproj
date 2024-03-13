@@ -1,28 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net5</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Copyright>Heather Floyd [www.HeatherFloyd.com]</Copyright>
     <RepositoryType>GIT</RepositoryType>
-    <Authors>Heather Floyd</Authors>
+    <Authors>HFloyd</Authors>
     <Company></Company>
-    <Product>Dragonfly</Product>
-    <Description>A collection of .Net Helpers &amp; Models (Targeted to .Net 5, compatible with .Net 6+)</Description>
+    <Product>Dragonfly .Net</Product>
+    <Description>A collection of .Net Helpers &amp; Models (Targeted to .Net 6, compatible with .Net 7+)</Description>
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://dragonflylibraries.com/aspnet-packages/net-helpers-models/</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/hfloyd/Dragonfly.Net5</RepositoryUrl>
-    <PackageId>Dragonfly.Net5</PackageId>
-    <AssemblyName>Dragonfly.Net5</AssemblyName>
-    <Version>1.6.1</Version>
+    <RepositoryUrl>https://github.com/hfloyd/Dragonfly.Net6</RepositoryUrl>
+    <PackageId>Dragonfly.Net6</PackageId>
+    <AssemblyName>Dragonfly.Net6</AssemblyName>
+    <Version>0.1.0</Version>
     <AssemblyVersion>$(Version)</AssemblyVersion>
     <FileVersion>$(Version)</FileVersion>
-    <PackageReleaseNotes>Updates including: Adding .Url() extension to HttpRequest</PackageReleaseNotes>
+    <PackageReleaseNotes>Initial Release</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <BaseIntermediateOutputPath />
     <PackageIcon>Dragonfly-NetHelpers-128.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Title>Dragonfly .Net 5 Helpers</Title>
+    <Title>Dragonfly .Net 6 Helpers</Title>
     <IncludeSymbols>True</IncludeSymbols>
   </PropertyGroup>
   <ItemGroup>
@@ -44,10 +44,10 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Html.Abstractions" Version="2.0.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.DataAnnotations" Version="2.0.2" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.11" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="1.1.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Html.Abstractions" Version="2.1.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.DataAnnotations" Version="2.1.3" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.28" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.1.3" />
 		<!--<PackageReference Include="Microsoft.AspNetCore.Mvc.RazorPages"/>-->
 	</ItemGroup>
 
@@ -58,8 +58,8 @@
     <DocumentationFile></DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.37" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.59" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.1.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup>
