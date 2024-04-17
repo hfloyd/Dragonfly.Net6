@@ -1,85 +1,107 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Copyright>Heather Floyd [www.HeatherFloyd.com]</Copyright>
-    <RepositoryType>GIT</RepositoryType>
-    <Authors>HFloyd</Authors>
-    <Company></Company>
-    <Product>Dragonfly .Net</Product>
-    <Description>A collection of .Net Helpers &amp; Models (Targeted to .Net 6, compatible with .Net 7+)</Description>
-    <PackageLicenseUrl></PackageLicenseUrl>
-    <PackageProjectUrl>https://dragonflylibraries.com/aspnet-packages/net-helpers-models/</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/hfloyd/Dragonfly.Net6</RepositoryUrl>
-    <PackageId>Dragonfly.Net6</PackageId>
-    <AssemblyName>Dragonfly.Net6</AssemblyName>
-    <Version>0.1.0</Version>
-    <AssemblyVersion>$(Version)</AssemblyVersion>
-    <FileVersion>$(Version)</FileVersion>
-    <PackageReleaseNotes>Initial Release</PackageReleaseNotes>
-    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
-    <BaseIntermediateOutputPath />
-    <PackageIcon>Dragonfly-NetHelpers-128.png</PackageIcon>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Title>Dragonfly .Net 6 Helpers</Title>
-    <IncludeSymbols>True</IncludeSymbols>
-  </PropertyGroup>
-  <ItemGroup>
-    <Compile Remove="HttpHelpers\**" />
-    <EmbeddedResource Remove="HttpHelpers\**" />
-    <None Remove="HttpHelpers\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="NetHelpers\Cookies.cs" />
-    <Compile Remove="NetHelpers\Info.cs" />
-    <Compile Remove="NetHelpers\Json.cs" />
-    <Compile Remove="NetHelpers\LazyHtmlString.cs" />
-    <Compile Remove="NetHelpers\Logger.cs" />
-    <Compile Remove="NetHelpers\MySql.cs" />
-    <Compile Remove="NetHelpers\RemotePost.cs" />
-    <Compile Remove="NetHelpers\WebsiteVisitor.cs" />
-    <Compile Remove="NetModels\DatabaseAccess.cs" />
-    <Compile Remove="NetModels\XmlConfig.cs" />
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	</PropertyGroup>
 
+	<!-- Package Description-->
+	<PropertyGroup>
+		<PackageId>Dragonfly.Net6</PackageId>
+		<Title>Dragonfly .Net Helpers</Title>
+		<Product>Dragonfly .Net</Product>
+		<Description>A collection of .Net Helpers &amp; Models (Targeted to .Net 6, compatible with .Net 7+)</Description>
+
+		<PackageProjectUrl>https://dragonflylibraries.com/aspnet-packages/net-helpers-models/</PackageProjectUrl>
+		<RepositoryType>GIT</RepositoryType>
+		<RepositoryUrl>https://github.com/hfloyd/Dragonfly.Net6</RepositoryUrl>
+
+		<PackageIcon>Dragonfly-NetHelpers-128.png</PackageIcon>
+		<PackageTags></PackageTags>
+		<PackageReleaseNotes>Initial Release</PackageReleaseNotes>
+	</PropertyGroup>
+
+	<!-- Author Info + Legal-->
+	<PropertyGroup>
+		<Authors>HFloyd</Authors>
+		<Company>Heather Floyd</Company>
+		<Copyright>Heather Floyd [www.HeatherFloyd.com]</Copyright>
+
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+		<PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+	</PropertyGroup>
+
+	<!-- Assembly Info-->
+	<PropertyGroup>
+		<RootNamespace>Dragonfly</RootNamespace>
+		<AssemblyName>Dragonfly.Net6</AssemblyName>
+		<Version>1.0.0</Version>
+		<AssemblyVersion>$(Version)</AssemblyVersion>
+		<FileVersion>$(Version)</FileVersion>
+
+		<IncludeSymbols>True</IncludeSymbols>
+		<SymbolPackageFormat>symbols.nupkg</SymbolPackageFormat>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	</PropertyGroup>
+
+	<!-- Include Package Items -->
+	<ItemGroup>
+		<None Include="..\..\Dragonfly-NetHelpers-128.png">
+		  <Pack>True</Pack>
+		  <PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\..\LICENSE.md">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+		<None Include="..\..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+	<!-- Packages-->
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Html.Abstractions" Version="2.1.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.DataAnnotations" Version="2.1.3" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.28" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.1.3" />
-		<!--<PackageReference Include="Microsoft.AspNetCore.Mvc.RazorPages"/>-->
+		<PackageReference Include="HtmlAgilityPack" Version="1.11.59" PrivateAssets="All" />
+		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.1.1" />
+		<!--	<PackageReference Include="Newtonsoft.Json" Version="13.0.1" PrivateAssets="All" />-->
 	</ItemGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile></DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile></DocumentationFile>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.59" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.1.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" PrivateAssets="All" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\Dragonfly-NetHelpers-128.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-    <None Include="..\..\LICENSE.md">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-    <None Include="..\..\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
+	<!-- Included/Excluded Files -->
+	<ItemGroup>
+		  <Content Include="Dragonfly-NetHelpers-128.png" />
+	
+		<Compile Remove="HttpHelpers\**" />
+		<EmbeddedResource Remove="HttpHelpers\**" />
+		<None Remove="HttpHelpers\**" />
 
-  <Import Project="..\Custom.targets" />
+		<Compile Remove="NetHelpers\Cookies.cs" />
+		<Compile Remove="NetHelpers\Info.cs" />
+		<Compile Remove="NetHelpers\Json.cs" />
+		<Compile Remove="NetHelpers\LazyHtmlString.cs" />
+		<Compile Remove="NetHelpers\Logger.cs" />
+		<Compile Remove="NetHelpers\MySql.cs" />
+		<Compile Remove="NetHelpers\RemotePost.cs" />
+		<Compile Remove="NetHelpers\WebsiteVisitor.cs" />
+		<Compile Remove="NetModels\DatabaseAccess.cs" />
+		<Compile Remove="NetModels\XmlConfig.cs" />
+	</ItemGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="REM XCOPY /s /y  &quot;$(TargetDir)$(TargetName).*&quot;  &quot;C:\Users\.Web\bin&quot;" />
-  </Target>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<DocumentationFile></DocumentationFile>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<DocumentationFile></DocumentationFile>
+	</PropertyGroup>
+
+	<Import Project="..\Custom.targets" />
+
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+		<Exec Command="REM XCOPY /s /y  &quot;$(TargetDir)$(TargetName).*&quot;  &quot;C:\Users\.Web\bin&quot;" />
+	</Target>
 </Project>
