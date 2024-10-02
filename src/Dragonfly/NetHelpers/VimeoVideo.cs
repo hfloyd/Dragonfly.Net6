@@ -1,10 +1,19 @@
-﻿namespace Dragonfly.NetHelpers
-{
+﻿namespace Dragonfly.NetHelpers;
+
     using System;
     using System.Linq;
 
+    /// <summary>
+    /// Helps for Vimeo Videos
+    /// </summary>
     public static class VimeoVideo
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="VimeoVideoUrl"></param>
+        /// <param name="VimeoImgUrl"></param>
+        /// <returns></returns>
         public static bool TryGetVimeoThumbnail(string VimeoVideoUrl, out string VimeoImgUrl)
         {
             var errorMsg = "";
@@ -14,6 +23,13 @@
             return result;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="VimeoVideoUrl"></param>
+        /// <param name="VimeoImgUrl"></param>
+        /// <param name="ErrorMessage"></param>
+        /// <returns></returns>
         public static bool TryGetVimeoThumbnail(string VimeoVideoUrl, out string VimeoImgUrl, out string ErrorMessage)
         {
             var imgUrl = "";
@@ -37,10 +53,15 @@
             return success;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="VimeoVideoId"></param>
+        /// <returns></returns>
         public static string GenerateVimeoThumbUrl(string VimeoVideoId)
         {
             const string vimeoThumbFormat = "https://i.vimeocdn.com/video/{0}_639x360.webp"; //{0}= vimeo video id
             return string.Format(vimeoThumbFormat, VimeoVideoId);
         }
     }
-}
+

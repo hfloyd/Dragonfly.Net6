@@ -11,6 +11,7 @@ namespace Dragonfly.NetModels
     /// </summary>
     public class CalendarQuarter
     {
+#pragma warning disable 1591
         public int QuarterNumber { get; set; }
         public int Year { get; set; }
         public DateTime StartDate { get; set; }
@@ -41,6 +42,10 @@ namespace Dragonfly.NetModels
             this.EndDate = StartDate.AddMonths(3).AddDays(-1);
         }
 
+        /// <summary>
+        /// Return the quarter directly prior to this one
+        /// </summary>
+        /// <returns></returns>
         public CalendarQuarter GetPriorQuarter()
         {
             var priorQ = 0;

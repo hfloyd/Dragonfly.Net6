@@ -4,8 +4,13 @@ namespace Dragonfly.NetModels
     using System.Collections.Generic;
     using System.Globalization;
 
+    /// <summary>
+    /// Object to handle paging operations
+    /// </summary>
     public class PagerModel
     {
+#pragma warning disable 1591
+
         /// <summary>
         /// 
         /// </summary>
@@ -73,6 +78,13 @@ namespace Dragonfly.NetModels
             get { return PreviousUrl != null; }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="MaxNumberLinks"></param>
+        /// <param name="MorePreviousDisplayText"></param>
+        /// <param name="MoreNextDisplayText"></param>
+        /// <returns></returns>
         public IEnumerable<PagerPageLink> GetPageNumberLinks(int MaxNumberLinks = 0, string MorePreviousDisplayText = "...", string MoreNextDisplayText = "...")
         {
             var links = new List<PagerPageLink>();
@@ -162,6 +174,7 @@ namespace Dragonfly.NetModels
     /// </summary>
     public class PagerPageLink
     {
+#pragma warning disable 1591
         public int PageNum { get; set; }
         public string DisplayString { get; set; }
         public bool IsPrevious { get; set; }
