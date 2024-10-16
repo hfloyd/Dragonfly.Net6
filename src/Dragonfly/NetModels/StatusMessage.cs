@@ -7,8 +7,8 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 
-#pragma warning disable 0618
 
+#pragma warning disable 0618
 /// <summary>
 /// Object used for collecting and reporting information about code operations.
 /// </summary>
@@ -393,11 +393,99 @@ public class StatusMessage
 		return sb.ToString();
 	}
 
+/// <summary>
+/// Converts StatusMessage into a SimplifiedStatusMessage and serializes it (appropriate for logging in a text file)
+/// </summary>
+/// <param name="IncludeRelatedObject">Also serialize the related objects associated with the StatusMessage
+/// </param>
+/// <param name="EscapeCurlyBraces">Replace '{...}' with '{{...}}' so that it can be used with the Microsoft Logger (otherwise throws a Format exception). Set to FALSE if logging to a text file or somewhere else.</param>
+/// <returns></returns>
+	public string ToSimplifiedStatusStringForLog(bool IncludeRelatedObject = false, bool EscapeCurlyBraces=true)
+	{
+		var simple = new StatusMessageSimplified(this, IncludeRelatedObject);
 
+		var json = JsonConvert.SerializeObject(simple, Formatting.Indented);
+		if (EscapeCurlyBraces)
+		{
+			 json = json.Replace("{", "{{").Replace("}", "}}");
+		}
+		return json;
+	}
 
 	#endregion
 
 
 }
 
+/// <summary>
+/// Simpler Version Of StatusMessage - good for logging and other simple uses
+/// </summary>
+[JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
+public class StatusMessageSimplified
+{
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+	public string RunningFunctionName { get; set; } = "";
 
+	public bool Success { get; set; }
+
+	public string Message { get; set; } = "";
+
+	public List<string> DetailedMessages { get; set; }
+	public string Code { get; set; }
+
+	public Dictionary<string, string> RelatedExceptionInfo { get; set; }
+
+	public object RelatedObject { get; set; }
+
+	public List<StatusMessageSimplified> InnerStatuses { get; set; }
+
+
+
+
+	public StatusMessageSimplified()
+	{
+		this.DetailedMessages = new List<string>();
+		this.InnerStatuses = new List<StatusMessageSimplified>();
+		this.RelatedExceptionInfo = new Dictionary<string, string>();
+	}
+
+	public StatusMessageSimplified(StatusMessage OriginalStatusMessage, bool IncludeRelatedObjects = false)
+	{
+		this.RunningFunctionName = !string.IsNullOrEmpty(OriginalStatusMessage.RunningFunctionName) ? OriginalStatusMessage.RunningFunctionName : "[Unspecified]";
+		this.Success = OriginalStatusMessage.Success;
+		this.Message = OriginalStatusMessage.Message;
+		this.Code = OriginalStatusMessage.Code;
+
+		if (OriginalStatusMessage.DetailedMessages.Any())
+		{
+			this.DetailedMessages = OriginalStatusMessage.DetailedMessages;
+		}
+
+		if (OriginalStatusMessage.RelatedExceptionInfo!=null && OriginalStatusMessage.RelatedExceptionInfo.Any())
+		{
+			this.RelatedExceptionInfo = OriginalStatusMessage.RelatedExceptionInfo;
+		}
+
+		if (IncludeRelatedObjects)
+		{
+			this.RelatedObject = OriginalStatusMessage.RelatedObject;
+		}
+
+		if (OriginalStatusMessage.InnerStatuses!=null && OriginalStatusMessage.InnerStatuses.Any())
+		{
+			if (this.InnerStatuses == null)
+			{
+				this.InnerStatuses = new List<StatusMessageSimplified>();
+			}
+
+			foreach (var status in OriginalStatusMessage.InnerStatuses)
+			{
+				var simplified = new StatusMessageSimplified(status, IncludeRelatedObjects);
+				
+				this.InnerStatuses.Add(simplified);
+			}
+		}
+
+	}
+
+}
