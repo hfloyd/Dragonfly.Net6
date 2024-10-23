@@ -393,21 +393,21 @@ public class StatusMessage
 		return sb.ToString();
 	}
 
-/// <summary>
-/// Converts StatusMessage into a SimplifiedStatusMessage and serializes it (appropriate for logging in a text file)
-/// </summary>
-/// <param name="IncludeRelatedObject">Also serialize the related objects associated with the StatusMessage
-/// </param>
-/// <param name="EscapeCurlyBraces">Replace '{...}' with '{{...}}' so that it can be used with the Microsoft Logger (otherwise throws a Format exception). Set to FALSE if logging to a text file or somewhere else.</param>
-/// <returns></returns>
-	public string ToSimplifiedStatusStringForLog(bool IncludeRelatedObject = false, bool EscapeCurlyBraces=true)
+	/// <summary>
+	/// Converts StatusMessage into a SimplifiedStatusMessage and serializes it (appropriate for logging in a text file)
+	/// </summary>
+	/// <param name="IncludeRelatedObject">Also serialize the related objects associated with the StatusMessage
+	/// </param>
+	/// <param name="EscapeCurlyBraces">Replace '{...}' with '{{...}}' so that it can be used with the Microsoft Logger (otherwise throws a Format exception). Set to FALSE if logging to a text file or somewhere else.</param>
+	/// <returns></returns>
+	public string ToSimplifiedStatusStringForLog(bool IncludeRelatedObject = false, bool EscapeCurlyBraces = true)
 	{
 		var simple = new StatusMessageSimplified(this, IncludeRelatedObject);
 
 		var json = JsonConvert.SerializeObject(simple, Formatting.Indented);
 		if (EscapeCurlyBraces)
 		{
-			 json = json.Replace("{", "{{").Replace("}", "}}");
+			json = json.Replace("{", "{{").Replace("}", "}}");
 		}
 		return json;
 	}
@@ -433,15 +433,13 @@ public class StatusMessageSimplified
 	public List<string> DetailedMessages { get; set; }
 	public string Code { get; set; }
 
-	public Dictionary<string, string> RelatedExceptionInfo { get; set; }
+	public Dictionary<string, string> RelatedExceptionInfo { get; set; } = new Dictionary<string, string>();
 
 	public object RelatedObject { get; set; }
 
 	public List<StatusMessageSimplified> InnerStatuses { get; set; }
 
-
-
-
+	#region CTOR
 	public StatusMessageSimplified()
 	{
 		this.DetailedMessages = new List<string>();
@@ -461,7 +459,7 @@ public class StatusMessageSimplified
 			this.DetailedMessages = OriginalStatusMessage.DetailedMessages;
 		}
 
-		if (OriginalStatusMessage.RelatedExceptionInfo!=null && OriginalStatusMessage.RelatedExceptionInfo.Any())
+		if (OriginalStatusMessage.RelatedExceptionInfo != null && OriginalStatusMessage.RelatedExceptionInfo.Any())
 		{
 			this.RelatedExceptionInfo = OriginalStatusMessage.RelatedExceptionInfo;
 		}
@@ -471,7 +469,7 @@ public class StatusMessageSimplified
 			this.RelatedObject = OriginalStatusMessage.RelatedObject;
 		}
 
-		if (OriginalStatusMessage.InnerStatuses!=null && OriginalStatusMessage.InnerStatuses.Any())
+		if (OriginalStatusMessage.InnerStatuses != null && OriginalStatusMessage.InnerStatuses.Any())
 		{
 			if (this.InnerStatuses == null)
 			{
@@ -481,11 +479,87 @@ public class StatusMessageSimplified
 			foreach (var status in OriginalStatusMessage.InnerStatuses)
 			{
 				var simplified = new StatusMessageSimplified(status, IncludeRelatedObjects);
-				
+
 				this.InnerStatuses.Add(simplified);
 			}
 		}
 
 	}
+
+	#endregion
+
+	#region Methods
+
+	/// <summary>
+	/// Returns TRUE if there is content in the 'Message' property
+	/// </summary>
+	public bool HasMessage()
+	{
+		if (this.Message != string.Empty & this.Message != null)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	/// <summary>
+	/// Checks main and all nested StatusMessages for exceptions. 
+	/// </summary>
+	/// <returns>Returns TRUE if any Exceptions found.</returns>
+	public bool HasAnyExceptions()
+	{
+		if (this.RelatedExceptionInfo != null && this.RelatedExceptionInfo.Any())
+		{
+			return true;
+		}
+
+		if (this.InnerStatuses.Any())
+		{
+			return this.InnerStatuses.Select(n => n.RelatedExceptionInfo).Any(n => n != null);
+		}
+
+		return false;
+	}
+
+	/// <summary>
+	/// Checks main and all nested StatusMessages for Success=false. 
+	/// </summary>
+	/// <returns>Returns TRUE if any found.</returns>
+	public bool HasAnyFailures()
+	{
+		if (!this.Success)
+		{
+			return true;
+		}
+
+		if (this.InnerStatuses.Any())
+		{
+			return this.InnerStatuses.Any(n => n.Success != true);
+		}
+
+		return false;
+	}
+
+	/// <summary>
+	/// Converts StatusMessage into a SimplifiedStatusMessage and serializes it (appropriate for logging in a text file)
+	/// </summary>
+	/// <param name="IncludeRelatedObject">Also serialize the related objects associated with the StatusMessage
+	/// </param>
+	/// <param name="EscapeCurlyBraces">Replace '{...}' with '{{...}}' so that it can be used with the Microsoft Logger (otherwise throws a Format exception). Set to FALSE if logging to a text file or somewhere else.</param>
+	/// <returns></returns>
+	public string ToStringForLog(bool IncludeRelatedObject = false, bool EscapeCurlyBraces = true)
+	{
+		var json = JsonConvert.SerializeObject(this, Formatting.Indented);
+		if (EscapeCurlyBraces)
+		{
+			json = json.Replace("{", "{{").Replace("}", "}}");
+		}
+		return json;
+	}
+	
+	#endregion
 
 }
