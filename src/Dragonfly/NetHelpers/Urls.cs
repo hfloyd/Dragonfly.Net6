@@ -47,15 +47,18 @@ public static class Urls
 	public static Dictionary<string, string> GetQueryStringDictionary(string Query)
 	{
 		var returnDict = new Dictionary<string, string>();
-
-		if (Query != "")
+		var cleanString = Query.Replace("?", "");
+		if (!string.IsNullOrEmpty(cleanString))
 		{
-			var splitString = Query.Replace("?", "").Split('&');
-
-			foreach (var pairString in splitString)
+			var splitString = cleanString.Split('&');
+			
+			if (splitString.Any())
 			{
-				var pair = pairString.Split('=');
-				returnDict.Add(pair[0], pair[1]);
+				foreach (var pairString in splitString)
+				{
+					var pair = pairString.Split('=');
+					returnDict.Add(pair[0], pair[1]);
+				}
 			}
 		}
 
@@ -611,7 +614,7 @@ public static class Urls
 			else
 			{
 				//Just append it as-is
-				allQs = string.Format("{0}&{1}={2}", allQs, item.Key, item.Value);
+				allQs = $"{allQs}&{item.Key}={item.Value}";
 			}
 		}
 
@@ -686,11 +689,22 @@ public static class Urls
 			qs.Remove(QsKeyToRemove);
 		}
 
+	
 		var allQs = AssembleQueryString(qs);
 
+		
 		//Build New Url
-		var newUrl = string.Format("{0}?{1}{2}", baseUrl, allQs, newAnchor);
-		newUrl = newUrl.Replace("?&", "?"); //Cleanup if all QS have been removed
+		var newUrl = "";
+		if (allQs != "")
+		{
+			 newUrl = $"{baseUrl}?{allQs}{newAnchor}";
+		}
+		else
+		{
+			newUrl = $"{baseUrl}{newAnchor}";
+		}
+
+		newUrl = newUrl.Replace("?&", ""); //Cleanup if all QS have been removed
 
 		return newUrl;
 	}
