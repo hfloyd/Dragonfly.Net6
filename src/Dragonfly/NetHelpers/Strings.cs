@@ -6,9 +6,8 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Web;
 using HtmlAgilityPack;
-using Microsoft.AspNetCore.Html;
+
 
 #pragma warning disable 0168
 
@@ -903,6 +902,28 @@ public static class Strings
 		return $"{Prefix}{Divider}{substring}";
 	}
 
+	///// <summary>
+	///// Split text 
+	///// </summary>
+	///// <param name="TextToSplit"></param>
+	///// <param name="Token"></param>
+	///// <returns></returns>
+	//public static string SplitByTokenIfItExists(string TextToSplit, string Token)
+	//{
+	//	if (!string.IsNullOrEmpty(TextToSplit))
+	//	{
+	//		if (TextToSplit.IndexOf(Token) > -1)
+	//		{
+	//			return TextToSplit.Substring(0, TextToSplit.IndexOf(Token));
+	//		}
+	//		return TextToSplit;
+	//	}
+	//	else
+	//	{
+	//		return "";
+	//	}
+
+	//}
 
 	#endregion
 
@@ -1076,6 +1097,45 @@ public static class Strings
 		}
 
 		return kvPairs;
+	}
+
+
+	//From https://stackoverflow.com/a/14488941/3841490
+	static readonly string[] SizeSuffixes =
+		{ "bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" };
+
+	/// <summary>
+	/// Converts a file size in bytes to a human-readable string
+	/// </summary>
+	/// <param name="BytesValue">Integer of bytes</param>
+	/// <param name="DecimalPlaces">Number of decimal places to display</param>
+	/// <returns></returns>
+	/// <exception cref="ArgumentOutOfRangeException"></exception>
+	public static string FileBytesToString(Int64 BytesValue, int DecimalPlaces = 1)
+	{
+		if (DecimalPlaces < 0) { throw new ArgumentOutOfRangeException(nameof(DecimalPlaces)); }
+		if (BytesValue < 0) { return "-" + FileBytesToString(-BytesValue, DecimalPlaces); }
+		if (BytesValue == 0) { return string.Format("{0:n" + DecimalPlaces + "} bytes", 0); }
+
+		// mag is 0 for bytes, 1 for KB, 2, for MB, etc.
+		int mag = (int)Math.Log(BytesValue, 1024);
+
+		// 1L << (mag * 10) == 2 ^ (10 * mag) 
+		// [i.e. the number of bytes in the unit corresponding to mag]
+		decimal adjustedSize = (decimal)BytesValue / (1L << (mag * 10));
+
+		// make adjustment when the value is large enough that
+		// it would round up to 1000 or more
+		if (Math.Round(adjustedSize, DecimalPlaces) >= 1000)
+		{
+			mag += 1;
+			adjustedSize /= 1024;
+		}
+
+		return string.Format("{0:n" + DecimalPlaces + "} {1}",
+			adjustedSize,
+			SizeSuffixes[mag]);
+
 	}
 
 	#endregion
