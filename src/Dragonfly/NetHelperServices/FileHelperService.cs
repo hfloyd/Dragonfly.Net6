@@ -790,10 +790,10 @@ public class FileHelperService
 	/// <param name="MappedOrRelativePath">The Path to look for</param>
 	/// <param name="MappedFolderPath">The Mapped path, returned</param>
 	/// <returns>False, if an exception occurred</returns>
-	public bool TryGetMappedPath(string MappedOrRelativePath, out string MappedFolderPath)
+	public bool TryGetMappedPath(string MappedOrRelativePath, out string MappedFolderPath, bool UseApplicationRoot=false)
 	{
 		MappedFolderPath = "";
-		var status = TryGetMappedPathWithStatus(MappedOrRelativePath, out MappedFolderPath);
+		var status = TryGetMappedPathWithStatus(MappedOrRelativePath, out MappedFolderPath,UseApplicationRoot);
 		return status.Success;
 
 	}
@@ -803,8 +803,9 @@ public class FileHelperService
 	/// </summary>
 	/// <param name="MappedOrRelativePath">The Path to look for</param>
 	/// <param name="MappedFolderPath">The Mapped path, returned</param>
+	/// <param name="UseApplicationRoot">If false, uses 'wwwroot'</param>
 	/// <returns>StatusMessage with information about the operation</returns>
-	public StatusMessage TryGetMappedPathWithStatus(string MappedOrRelativePath, out string MappedFolderPath)
+	public StatusMessage TryGetMappedPathWithStatus(string MappedOrRelativePath, out string MappedFolderPath, bool UseApplicationRoot=false)
 	{
 		var status = new StatusMessage();
 		MappedFolderPath = "";
@@ -822,7 +823,15 @@ public class FileHelperService
 				else
 				{
 					//Try to Map it
-					MappedFolderPath = _webHostEnvironment.MapPathWebRoot(MappedOrRelativePath);
+					if (UseApplicationRoot)
+					{
+						MappedFolderPath = _webHostEnvironment.MapPathContentRoot(MappedOrRelativePath);
+					}
+					else
+					{
+						MappedFolderPath = _webHostEnvironment.MapPathWebRoot(MappedOrRelativePath);
+					}
+
 					status.Message = $"'{MappedOrRelativePath}' maps to '{MappedFolderPath}'";
 					status.Success = true;
 				}
