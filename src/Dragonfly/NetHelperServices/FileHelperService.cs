@@ -789,13 +789,26 @@ public class FileHelperService
 	/// </summary>
 	/// <param name="MappedOrRelativePath">The Path to look for</param>
 	/// <param name="MappedFolderPath">The Mapped path, returned</param>
+	/// <param name="UseApplicationRoot">If false, uses 'wwwroot'</param>
 	/// <returns>False, if an exception occurred</returns>
-	public bool TryGetMappedPath(string MappedOrRelativePath, out string MappedFolderPath, bool UseApplicationRoot=false)
+	public bool TryGetMappedPath(string MappedOrRelativePath, out string MappedFolderPath, bool UseApplicationRoot = false)
 	{
 		MappedFolderPath = "";
-		var status = TryGetMappedPathWithStatus(MappedOrRelativePath, out MappedFolderPath,UseApplicationRoot);
+		var status = TryGetMappedPathWithStatus(MappedOrRelativePath, out MappedFolderPath, UseApplicationRoot);
 		return status.Success;
 
+	}
+
+	/// <summary>
+	/// Tries to get a mapped path of the provided path from wwwroot
+	/// </summary>
+	/// <param name="MappedOrRelativePath">The Path to look for</param>
+	/// <param name="MappedFolderPath">The Mapped path, returned</param>
+	/// <returns>False, if an exception occurred</returns>
+	[Obsolete("Version without final parameter added for backwards compatibility.")]
+	public bool TryGetMappedPath(string MappedOrRelativePath, out string MappedFolderPath)
+	{
+		return TryGetMappedPath(MappedOrRelativePath, out MappedFolderPath, false);
 	}
 
 	/// <summary>
@@ -805,7 +818,7 @@ public class FileHelperService
 	/// <param name="MappedFolderPath">The Mapped path, returned</param>
 	/// <param name="UseApplicationRoot">If false, uses 'wwwroot'</param>
 	/// <returns>StatusMessage with information about the operation</returns>
-	public StatusMessage TryGetMappedPathWithStatus(string MappedOrRelativePath, out string MappedFolderPath, bool UseApplicationRoot=false)
+	public StatusMessage TryGetMappedPathWithStatus(string MappedOrRelativePath, out string MappedFolderPath, bool UseApplicationRoot = false)
 	{
 		var status = new StatusMessage();
 		MappedFolderPath = "";
@@ -856,6 +869,19 @@ public class FileHelperService
 		}
 
 		return status;
+	}
+
+
+	/// <summary>
+	/// Tries to get a mapped path of the provided path from wwwroot
+	/// </summary>
+	/// <param name="MappedOrRelativePath">The Path to look for</param>
+	/// <param name="MappedFolderPath">The Mapped path, returned</param>
+	/// <returns>StatusMessage with information about the operation</returns>
+	[Obsolete("Version without final parameter added for backwards compatibility.")]
+	public StatusMessage TryGetMappedPathWithStatus(string MappedOrRelativePath, out string MappedFolderPath)
+	{
+		return TryGetMappedPathWithStatus(MappedOrRelativePath, out MappedFolderPath, false);
 	}
 
 	#endregion
