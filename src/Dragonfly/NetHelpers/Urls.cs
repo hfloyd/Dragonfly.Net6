@@ -1,13 +1,14 @@
 ﻿namespace Dragonfly.NetHelpers;
 
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Primitives;
 
 #pragma warning disable 0168
 
@@ -57,7 +58,18 @@ public static class Urls
 				foreach (var pairString in splitString)
 				{
 					var pair = pairString.Split('=');
-					returnDict.Add(pair[0], pair[1]);
+					try
+					{
+						returnDict.Add(pair[0], pair[1]);
+					}
+					catch (Exception e)
+					{
+						if(e.Message.Contains("An item with the same key has already been added"))
+						{
+							// Skip this key, as it already exists
+						}
+					}
+					
 				}
 			}
 		}
