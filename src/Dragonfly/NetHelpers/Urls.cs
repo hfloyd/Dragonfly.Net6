@@ -2,13 +2,16 @@
 
 using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Primitives;
+using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Web;
 
 #pragma warning disable 0168
 
@@ -43,6 +46,7 @@ public static class Urls
 	/// <summary>
 	/// Parse a Query string, returning a Dictionary representing all the Query String Values
 	/// </summary>
+	/// <remarks>NOTE: If duplicate keys are provided, only the first will be preserved</remarks>
 	/// <param name="Query">Query-string portion of a url</param>
 	/// <returns>Dictionary&gt;string, string&lt;</returns>
 	public static Dictionary<string, string> GetQueryStringDictionary(string Query)
@@ -52,7 +56,7 @@ public static class Urls
 		if (!string.IsNullOrEmpty(cleanString))
 		{
 			var splitString = cleanString.Split('&');
-			
+
 			if (splitString.Any())
 			{
 				foreach (var pairString in splitString)
@@ -64,17 +68,45 @@ public static class Urls
 					}
 					catch (Exception e)
 					{
-						if(e.Message.Contains("An item with the same key has already been added"))
+						if (e.Message.Contains("An item with the same key has already been added"))
 						{
 							// Skip this key, as it already exists
 						}
 					}
-					
+
 				}
 			}
 		}
 
 		return returnDict;
+	}
+
+	/// <summary>
+	/// Parses a query string into a list of key/value pairs representing the parameters and their values.
+	/// </summary>
+	/// <remarks>If the query string contains duplicate parameter names, they will all be preserved</remarks>
+	/// <param name="Query">The query string to parse. May include or omit the leading question mark ('?').</param>
+	/// <returns>A list of key/value pairs containing the parameter names and values from the query string. The list is empty if the
+	/// input is null, empty, or contains no parameters.</returns>
+	public static List<KeyValuePair<string, string>> GetQueryStringsList(string Query)
+	{
+		var returnList = new List<KeyValuePair<string, string>>();
+		var cleanString = Query.Replace("?", "");
+		if (!string.IsNullOrEmpty(cleanString))
+		{
+			var splitString = cleanString.Split('&');
+
+			if (splitString.Any())
+			{
+				foreach (var pairString in splitString)
+				{
+					var pair = pairString.Split('=');
+					returnList.Add(new KeyValuePair<string, string>(pair[0], pair[1]));
+				}
+			}
+		}
+
+		return returnList;
 	}
 
 	/// <summary>
@@ -701,15 +733,15 @@ public static class Urls
 			qs.Remove(QsKeyToRemove);
 		}
 
-	
+
 		var allQs = AssembleQueryString(qs);
 
-		
+
 		//Build New Url
 		var newUrl = "";
 		if (allQs != "")
 		{
-			 newUrl = $"{baseUrl}?{allQs}{newAnchor}";
+			newUrl = $"{baseUrl}?{allQs}{newAnchor}";
 		}
 		else
 		{
@@ -744,6 +776,74 @@ public static class Urls
 		return allQs;
 	}
 
+
+	/// <summary>
+	/// Removes duplicate query string parameters from the specified URI, optionally combining their values with a comma.
+	/// </summary>
+	/// <remarks>If the URI contains duplicate query string keys, this method either combines their values or
+	/// retains only the first occurrence, depending on the value of <paramref name="CombineValuesWithComma"/>. The
+	/// returned URI preserves the original scheme, host, port, and path.</remarks>
+	/// <param name="OriginalUri">The URI whose query string will be examined and cleaned of duplicate parameters. Cannot be null.</param>
+	/// <param name="CombineValuesWithComma">If set to <see langword="true"/>, combines the values of duplicate parameters into a single comma-separated value;
+	/// otherwise, only the first value is retained. The default is <see langword="false"/>.</param>
+	/// <returns>A string representation of the URI with duplicate query string parameters removed or combined. If no duplicates are
+	/// found, returns the original URI as a string.</returns>
+	public static string RemoveDuplicateQueryStringParams(Uri OriginalUri, bool CombineValuesWithComma = false)
+	{
+		//Look for duplicate keys in the query string
+		var queryString = GetQueryStringsList(OriginalUri.Query);
+		var keys = queryString.Select(kv=> kv.Key);
+		var duplicates = keys.GroupBy(k => k)
+							 .Where(g => g.Count() > 1)
+							 .Select(g => g.Key)
+							 .ToList();
+
+		var hasDuplicates = duplicates.Any();
+
+		if (hasDuplicates)
+		{
+			//Rebuild Url
+			var uriBuilder = new UriBuilder
+			{
+				Scheme = OriginalUri.Scheme,
+				Host = OriginalUri.Host,
+				Port = OriginalUri.Port,
+				Path = OriginalUri.AbsolutePath,
+			};
+
+			var cleanQuery = HttpUtility.ParseQueryString(string.Empty);
+
+			// Fix duplicates
+			foreach (var key in keys.Distinct())
+			{
+				var values = queryString.Where(kv=> kv.Key==key).Select(kv=> kv.Value).ToList();
+				if (values.Any())
+				{
+					if (CombineValuesWithComma && values.Count > 1)
+					{
+						// Combine values with comma
+						cleanQuery[key] = string.Join(",", values);
+					}
+					else
+					{
+						// Just take the first value
+						cleanQuery[key] = values[0];
+					}
+				}
+			}
+
+			uriBuilder.Query = cleanQuery.ToString();
+
+			return uriBuilder.Uri.ToString();
+
+		}
+		else
+		{
+			//No dupes, just return original
+			return OriginalUri.ToString();
+		}
+
+	}
 
 	///// <summary>
 	///// Rewrites the path of uri.
