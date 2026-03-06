@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>net6.0;net7.0;net8.0;net9.0</TargetFrameworks>
+		<TargetFrameworks>net6.0;net7.0;net8.0;net9.0;net10.0</TargetFrameworks>
 		<!--<TargetFramework>net6.0</TargetFramework>-->
 		<!--<TargetFramework>net8.0</TargetFramework>-->
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -11,7 +11,7 @@
 		<PackageId>Dragonfly.Net6</PackageId>
 		<Title>Dragonfly .Net Helpers</Title>
 		<Product>Dragonfly .Net</Product>
-		<Description>A collection of .Net Helpers &amp; Models (Multi-targeted for .Net 6 - .Net 9)</Description>
+		<Description>A collection of .Net Helpers &amp; Models (Multi-targeted for .Net 6 - .Net 10)</Description>
 
 		<PackageProjectUrl>https://dragonflylibraries.com/aspnet-packages/net-helpers-models/</PackageProjectUrl>
 		<RepositoryType>GIT</RepositoryType>
@@ -36,10 +36,10 @@
 	<PropertyGroup>
 		<RootNamespace>Dragonfly</RootNamespace>
 		<AssemblyName>Dragonfly.Net6</AssemblyName>
-		<Version>2.1.0</Version>
+		<Version>2.2.0</Version>
 		<AssemblyVersion>$(Version)</AssemblyVersion>
 		<FileVersion>$(Version)</FileVersion>
-		<PackageReleaseNotes>Adding additional Urlhandling, and fixing PagerModel</PackageReleaseNotes>
+		<PackageReleaseNotes>Adding support for .Net 10</PackageReleaseNotes>
 
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>symbols.nupkg</SymbolPackageFormat>
@@ -74,13 +74,8 @@
 	</ItemGroup>
 
 	<!-- Included/Excluded Files -->
-	<ItemGroup>
-		<Content Include="Dragonfly-NetHelpers-128.png" />
-
-		<Compile Remove="HttpHelpers\**" />
-		<EmbeddedResource Remove="HttpHelpers\**" />
-		<None Remove="HttpHelpers\**" />
-
+	<ItemGroup>	
+        <Compile Remove="HttpHelpers\**" />
 		<Compile Remove="NetHelpers\Cookies.cs" />
 		<Compile Remove="NetHelpers\Info.cs" />
 		<Compile Remove="NetHelpers\Json.cs" />
@@ -91,6 +86,10 @@
 		<Compile Remove="NetHelpers\WebsiteVisitor.cs" />
 		<Compile Remove="NetModels\DatabaseAccess.cs" />
 		<Compile Remove="NetModels\XmlConfig.cs" />
+		
+		<EmbeddedResource Remove="HttpHelpers\**" />
+			
+		<None Remove="HttpHelpers\**" />
 	</ItemGroup>
 
 
